@@ -5,4 +5,145 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string-array name="titles">
+        <item >Intents and Intent Filters</item>
+        <item >Activities</item>
+        <item >Service</item>
+        <item >Content Providers</item>
+        <item >App Widgets</item>
+        <item >Action Bar</item>
+        <item >Dialogs</item>
+        <item >Toasts</item>
+        <item >Notifications</item>
+    </string-array>
+
+    <string-array name="description">
+        <item >An Intent is a messaging object you can use to request an action from another app component. Although intents facilitate communication between components in several ways, there are three fundamental use-cases:
+
+To start an activity:
+An Activity represents a single screen in an app. You can start a new instance of an Activity by passing an Intent to startActivity(). The Intent describes the activity to start and carries any necessary data.
+If you want to receive a result from the activity when it finishes, call startActivityForResult(). Your activity receives the result as a separate Intent object in your activitys onActivityResult() callback. For more information, see the Activities guide.
+To start a service:
+A Service is a component that performs operations in the background without a user interface. You can start a service to perform a one-time operation (such as download a file) by passing an Intent to startService(). The Intent describes the service to start and carries any necessary data.
+If the service is designed with a client-server interface, you can bind to the service from another component by passing an Intent to bindService(). For more information, see the Services guide.
+To deliver a broadcast:
+A broadcast is a message that any app can receive. The system delivers various broadcasts for system events, such as when the system boots up or the device starts charging. You can deliver a broadcast to other apps by passing an Intent to sendBroadcast(), sendOrderedBroadcast(), or sendStickyBroadcast().</item>
+        <item >An Activity is an application component that provides a screen with which users can interact in order to do something, such as dial the phone, take a photo, send an email, or view a map. Each activity is given a window in which to draw its user interface. The window typically fills the screen, but may be smaller than the screen and float on top of other windows.
+
+An application usually consists of multiple activities that are loosely bound to each other. Typically, one activity in an application is specified as the "main" activity, which is presented to the user when launching the application for the first time. Each activity can then start another activity in order to perform different actions. Each time a new activity starts, the previous activity is stopped, but the system preserves the activity in a stack (the "back stack"). When a new activity starts, it is pushed onto the back stack and takes user focus. The back stack abides to the basic "last in, first out" stack mechanism, so, when the user is done with the current activity and presses the Back button, it is popped from the stack (and destroyed) and the previous activity resumes. (The back stack is discussed more in the Tasks and Back Stack document.)
+
+When an activity is stopped because a new activity starts, it is notified of this change in state through the activitys lifecycle callback methods. There are several callback methods that an activity might receive, due to a change in its state—whether the system is creating it, stopping it, resuming it, or destroying it—and each callback provides you the opportunity to perform specific work thats appropriate to that state change. For instance, when stopped, your activity should release any large objects, such as network or database connections. When the activity resumes, you can reacquire the necessary resources and resume actions that were interrupted. These state transitions are all part of the activity lifecycle.
+
+The rest of this document discusses the basics of how to build and use an activity, including a complete discussion of how the activity lifecycle works, so you can properly manage the transition between various activity states.</item>
+        <item >A Service is an application component that can perform long-running operations in the background and does not provide a user interface. Another application component can start a service and it will continue to run in the background even if the user switches to another application. Additionally, a component can bind to a service to interact with it and even perform interprocess communication (IPC). For example, a service might handle network transactions, play music, perform file I/O, or interact with a content provider, all from the background.
+
+A service can essentially take two forms:
+
+Started
+A service is "started" when an application component (such as an activity) starts it by calling startService(). Once started, a service can run in the background indefinitely, even if the component that started it is destroyed. Usually, a started service performs a single operation and does not return a result to the caller. For example, it might download or upload a file over the network. When the operation is done, the service should stop itself.
+Bound
+A service is "bound" when an application component binds to it by calling bindService(). A bound service offers a client-server interface that allows components to interact with the service, send requests, get results, and even do so across processes with interprocess communication (IPC). A bound service runs only as long as another application component is bound to it. Multiple components can bind to the service at once, but when all of them unbind, the service is destroyed.
+Although this documentation generally discusses these two types of services separately, your service can work both ways—it can be started (to run indefinitely) and also allow binding. Its simply a matter of whether you implement a couple callback methods: onStartCommand() to allow components to start it and onBind() to allow binding.
+
+Regardless of whether your application is started, bound, or both, any application component can use the service (even from a separate application), in the same way that any component can use an activity—by starting it with an Intent. However, you can declare the service as private, in the manifest file, and block access from other applications. This is discussed more in the section about Declaring the service in the manifest.
+
+Caution: A service runs in the main thread of its hosting process—the service does not create its own thread and does not run in a separate process (unless you specify otherwise). This means that, if your service is going to do any CPU intensive work or blocking operations (such as MP3 playback or networking), you should create a new thread within the service to do that work. By using a separate thread, you will reduce the risk of Application Not Responding (ANR) errors and the applications main thread can remain dedicated to user interaction with your activities.</item>
+        <item >Content providers manage access to a structured set of data. They encapsulate the data, and provide mechanisms for defining data security. Content providers are the standard interface that connects data in one process with code running in another process.
+
+When you want to access data in a content provider, you use the ContentResolver object in your applications Context to communicate with the provider as a client. The ContentResolver object communicates with the provider object, an instance of a class that implements ContentProvider. The provider object receives data requests from clients, performs the requested action, and returns the results.
+
+You dont need to develop your own provider if you dont intend to share your data with other applications. However, you do need your own provider to provide custom search suggestions in your own application. You also need your own provider if you want to copy and paste complex data or files from your application to other applications.
+
+Android itself includes content providers that manage data such as audio, video, images, and personal contact information. You can see some of them listed in the reference documentation for the android.provider package. With some restrictions, these providers are accessible to any Android application.
+
+The following topics describe content providers in more detail:
+
+Content Provider Basics
+How to access data in a content provider when the data is organized in tables.
+Creating a Content Provider
+How to create your own content provider.
+Calendar Provider
+How to access the Calendar Provider that is part of the Android platform.
+Contacts Provider
+How to access the Contacts Provider that is part of the Android platform.</item>
+        <item >App Widgets are miniature application views that can be embedded in other applications (such as the Home screen) and receive periodic updates. These views are referred to as Widgets in the user interface, and you can publish one with an App Widget provider. An application component that is able to hold other App Widgets is called an App Widget host. The screenshot below shows the Music App Widget.
+
+
+This document describes how to publish an App Widget using an App Widget provider. For a discussion of creating your own AppWidgetHost to host app widgets, see App Widget Host.
+
+Widget Design
+For information about how to design your app widget, read the Widgets design guide.</item>
+        <item >The action bar is a window feature that identifies the user location, and provides user actions and navigation modes. Using the action bar offers your users a familiar interface across applications that the system gracefully adapts for different screen configurations.
+
+
+Figure 1. An action bar that includes the [1] app icon, [2] two action items, and [3] action overflow.
+
+The action bar provides several key functions:
+
+Provides a dedicated space for giving your app an identity and indicating the users location in the app.
+Makes important actions prominent and accessible in a predictable way (such as Search).
+Supports consistent navigation and view switching within apps (with tabs or drop-down lists).
+For more information about the action bars interaction patterns and design guidelines, see the Action Bar design guide.
+
+The ActionBar APIs were first added in Android 3.0 (API level 11) but they are also available in the Support Library for compatibility with Android 2.1 (API level 7) and above.
+
+This guide focuses on how to use the support librarys action bar, but if your app supports only Android 3.0 or higher, you should use the ActionBar APIs in the framework. Most of the APIs are the same—but reside in a different package namespace—with a few exceptions to method names or signatures that are noted in the sections below.
+
+Caution: Be certain you import the ActionBar class (and related APIs) from the appropriate package:
+If supporting API levels lower than 11:
+import android.support.v7.app.ActionBar
+If supporting only API level 11 and higher:
+import android.app.ActionBar
+Note: If youre looking for information about the contextual action bar for displaying contextual action items, see the Menu guide.</item>
+        <item >A dialog is a small window that prompts the user to make a decision or enter additional information. A dialog does not fill the screen and is normally used for modal events that require users to take an action before they can proceed.
+
+Dialog Design
+For information about how to design your dialogs, including recommendations for language, read the Dialogs design guide.
+
+The Dialog class is the base class for dialogs, but you should avoid instantiating Dialog directly. Instead, use one of the following subclasses:
+
+AlertDialog
+A dialog that can show a title, up to three buttons, a list of selectable items, or a custom layout.
+DatePickerDialog or TimePickerDialog
+A dialog with a pre-defined UI that allows the user to select a date or time.
+Avoid ProgressDialog Android includes another dialog class called ProgressDialog that shows a dialog with a progress bar. However, if you need to indicate loading or indeterminate progress, you should instead follow the design guidelines for Progress and Activity and use a ProgressBar in your layout.
+These classes define the style and structure for your dialog, but you should use a DialogFragment as a container for your dialog. The DialogFragment class provides all the controls you need to create your dialog and manage its appearance, instead of calling methods on the Dialog object.
+
+Using DialogFragment to manage the dialog ensures that it correctly handles lifecycle events such as when the user presses the Back button or rotates the screen. The DialogFragment class also allows you to reuse the dialogs UI as an embeddable component in a larger UI, just like a traditional Fragment (such as when you want the dialog UI to appear differently on large and small screens).
+
+The following sections in this guide describe how to use a DialogFragment in combination with an AlertDialog object. If youd like to create a date or time picker, you should instead read the Pickers guide.
+
+Note: Because the DialogFragment class was originally added with Android 3.0 (API level 11), this document describes how to use the DialogFragment class thats provided with the Support Library. By adding this library to your app, you can use DialogFragment and a variety of other APIs on devices running Android 1.6 or higher. If the minimum version your app supports is API level 11 or higher, then you can use the framework version of DialogFragment, but be aware that the links in this document are for the support library APIs. When using the support library, be sure that you import android.support.v4.app.DialogFragment class and not android.app.DialogFragment.</item>
+        <item >A toast provides simple feedback about an operation in a small popup. It only fills the amount of space required for the message and the current activity remains visible and interactive. For example, navigating away from an email before you send it triggers a "Draft saved" toast to let you know that you can continue editing later. Toasts automatically disappear after a timeout.
+
+
+If user response to a status message is required, consider instead using a Notification.
+
+The Basics
+First, instantiate a Toast object with one of the makeText() methods. This method takes three parameters: the application Context, the text message, and the duration for the toast. It returns a properly initialized Toast object. You can display the toast notification with show(), as shown in the following example:</item>
+        <item >A notification is a message you can display to the user outside of your applications normal UI. When you tell the system to issue a notification, it first appears as an icon in the notification area. To see the details of the notification, the user opens the notification drawer. Both the notification area and the notification drawer are system-controlled areas that the user can view at any time.
+
+
+Figure 1. Notifications in the notification area.
+
+
+Figure 2. Notifications in the notification drawer.
+
+Notification Design
+Notifications, as an important part of the Android UI, have their own design guidelines. To learn how to design notifications and their interactions, read the Android Design Guide Notifications topic.
+Note: Except where noted, this guide refers to the NotificationCompat.Builder class in the version 4 Support Library. The class Notification.Builder was added in Android 3.0.
+
+Notification Display Elements
+Notifications in the notification drawer can appear in one of two visual styles, depending on the version and the state of the drawer:
+
+Normal view
+The standard view of the notifications in the notification drawer.
+Big view
+A large view thats visible when the notification is expanded. Big view is part of the expanded notification feature available as of Android 4.1.
+These styles are described in the following sections.
+
+Normal view
+
+A notification in normal view appears in an area thats up to 64 dp tall. Even if you create a notification with a big view style, it will appear in normal view until its expanded. This is an example of a normal view:</item>
+    </string-array>
 </resources>

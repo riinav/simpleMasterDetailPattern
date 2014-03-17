@@ -1,17 +1,22 @@
 package com.aquaJax.simplemasterdetailpattern.app;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements Communicator {
+
+    String descriptionData[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        descriptionData = getResources().getStringArray(R.array.description);
     }
 
 
@@ -35,4 +40,10 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void respond(int index) {
+
+        FragmentB fragment = (FragmentB) getSupportFragmentManager().findFragmentById(R.id.fragment_b);
+        fragment.setTextDescription(descriptionData[index]);
+    }
 }
